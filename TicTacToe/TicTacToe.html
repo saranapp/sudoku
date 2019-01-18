@@ -1,0 +1,382 @@
+<html>
+
+
+<head>
+
+<title>TicTacToe_3x3</title>
+    <style type="text/css">
+        *{margin:0 auto 0 auto;}
+        body{background-color:#000000; font-family:"Arial",Georgia,sans-serif;}
+        
+        
+        
+        
+        #box{
+             margin:60 auto;
+             position:relative;
+             width:500px;
+             height:500px;
+             background-color:#b4c1fa;
+             border:15px solid white;
+             text-align:center;
+             text-shadow:none;
+             
+             }
+
+        #l1{
+             color:#000000;
+             font-style:normal;
+	     font-weight:bold;
+	     font-variant:small-caps; 
+	     text-shadow: white 0em 0em 0.2em;            
+             }
+        
+    
+        
+	.inButton
+	 {
+		height:60px;
+        	width:60px;
+        	font-size:30px;
+        	font-weight:bold;
+        }
+
+
+        body,html{text-align:center;}
+        </style>
+        
+        
+<script language="javascript" type="text/javascript">
+	
+	
+	var limit=3;
+	var a = new Array(limit);
+	var gameOverFlag=0;
+
+  	for (var j = 0; j < limit; j++) {
+   		a[j] = new Array(limit);
+  	}
+
+
+	function refresh(){
+		for(var i=0;i<limit;i++)
+			for(var j=0;j<limit;j++)
+				a[i][j]=null;
+		for(var i=0;i<limit*limit;i++)
+			document.getElementById(i).value="";
+
+		gameOverFlag=0;
+		document.getElementById("l1").innerHTML="Restarted! X's turn to start";
+		return;
+	}
+
+	function notice(noticeString){
+		alert(noticeString);
+		document.getElementById("l1").innerHTML=noticeString;
+	}
+  
+  	function putX(id){
+
+		document.getElementById(id).value="X";
+
+
+
+		var i=Math.floor(id/limit);
+		var j= id - (i*limit);
+
+		a[i][j]='X';
+		return;
+	}
+
+
+
+	//Checks for all possible win scenarios for a particular sign
+	//returns 1: if game is over or draw (a[][] is full)
+	//returns 0: otherwise
+	function check(sign){
+		var k=0;
+
+		//Checking if a[][] is full
+		for(var i=0;i<limit;i++){
+			for(var j=0;j<limit;j++){
+				if((a[i][j]=="X")||(a[i][j]=="O"))
+					continue;
+				else{					
+					k=1;//that is, there is an empty slot available in a[][]				
+					break;
+				}
+			}
+			if(k==1)
+				break;
+		}
+	
+		if(k==0){
+			notice("Game is a draw");
+			return 1;
+		}
+
+		k=0;
+
+		//each row check
+		for(var i=0;i<limit;i++){
+			for(var j=0;j<limit;j++){
+				if(a[i][j]==sign)
+					k++;
+			}
+			if(k==limit){
+				notice(sign+" wins! Match along Row: "+(i+1));
+				return 1;
+			}
+			else
+				k=0;		
+		}
+
+
+		//each column check
+		for(var i=0;i<limit;i++){
+			for(var j=0;j<limit;j++){
+				if(a[j][i]==sign)
+					k++;
+			}
+			if(k==limit){
+				notice(sign+" wins! Match along Column: "+(i+1));
+				return 1;
+			}
+			else
+				k=0;		
+		}
+
+		//Diagonal \ check
+		for(var i=0;i<limit;i++){
+			if(a[i][i]==sign)
+				k++;			
+		}
+		if(k==limit){
+			notice(sign+" wins! Match along Diagonal \\");
+			return 1;
+		}
+		else
+			k=0;
+
+
+		//Diagonal / check
+		var temp = limit-1;
+		for(var i=0;i<limit;i++){
+			if(a[temp-(temp-i)][temp-i]==sign)
+				k++;			
+		}
+		if(k==limit){
+			notice(sign+" wins! Match along Diagonal /");
+			return 1;
+		}
+		else
+			k=0;
+
+		
+		//Finishing check
+		return 0;
+	}
+
+
+
+
+
+	//Brain Code
+	//the computer's logic
+	//if input is X, it searches for X's placements and spoils em
+	//if input is O, it enhances O's chances of winning
+	function putO(sign){
+
+		var bigk=0;
+		var k=0;
+		var bigi=0;
+		var bigj=0;
+		var tempi=0;
+		var tempj=0;
+
+		
+		//each row
+		for(var i=0;i<limit;i++){
+			for(var j=0;j<limit;j++){
+				if(a[i][j]==sign)
+					k++;
+
+				if(a[i][j]==null){
+				tempi=i;
+				tempj=j;
+				}
+						
+			}
+			
+			if(k>=bigk){
+				bigk=k;
+				bigi=tempi;
+				bigj=tempj;
+			}
+
+			k=0;		
+		}
+
+
+		//each column 
+		for(var i=0;i<limit;i++){
+			for(var j=0;j<limit;j++){
+				if(a[j][i]==sign)
+					k++;
+				if(a[j][i]==null){
+				tempi=j;
+				tempj=i;
+				}
+					
+			}
+			
+			if(k>=bigk){
+				bigk=k;
+				bigi=tempi;
+				bigj=tempj;
+			}
+			
+			k=0;		
+		}
+
+
+		//Diagonal \ 
+		for(var i=0;i<limit;i++){
+			if(a[i][i]==sign)
+				k++;
+			if(a[i][i]==null){
+				tempi=i;
+				tempj=i;
+			}
+					
+		}
+		
+		if(k>=bigk){
+			bigk=k;
+			bigi=tempi;
+			bigj=tempj;
+		}
+			
+		k=0;			
+
+
+
+		//Diagonal / 
+		var temp = limit-1;
+		for(var i=0;i<limit;i++){
+			if(a[temp-(temp-i)][temp-i]==sign)
+				k++;	
+			if(a[temp-(temp-i)][temp-i]==null){
+				tempi=temp-(temp-i);
+				tempj=temp-i;
+			}
+					
+		}
+
+		if(k>=bigk){
+			bigk=k;
+			bigi=tempi;
+			bigj=tempj;
+		}
+			
+		k=0;	
+
+
+		if(a[bigi][bigj]!=null)
+			putO('O');
+
+		else{
+			a[bigi][bigj]='O';
+			document.getElementById(bigi*limit + bigj).value="O";
+		}
+	}
+
+
+
+	//the main method
+	function clickf(id){
+
+		var i=Math.floor(id/limit);
+		var j= id - (i*limit);
+
+		if((a[i][j]=="X")||(a[i][j]=="O")||(gameOverFlag==1))
+			return;
+		else{
+			putX(id);
+			if(check('X')){
+				gameOverFlag=1;	
+				return;
+			}
+	
+			
+
+			putO('X');
+			if(check('O')){
+				gameOverFlag=1;			
+				return;
+			}		
+		}
+		return;
+	}
+  
+  
+</script>
+</head>
+
+
+<body>
+
+
+<div id="box">
+
+	<br />
+	<h2><u>Tic Tac Toe</u></h2>
+	
+
+	<br />
+	<input type="button" id="refresh" onclick="return refresh();" value="Restart"/>
+	<br />
+	<br />
+
+
+		<input type="button" class="inButton" id="0" onclick="clickf(this.id)"  />
+		<input type="button" class="inButton" id="1" onclick="clickf(this.id)"  />
+		<input type="button" class="inButton" id="2" onclick="clickf(this.id)"  />
+		<br />
+		<input type="button" class="inButton" id="3" onclick="clickf(this.id)"  />
+		<input type="button" class="inButton" id="4" onclick="clickf(this.id)"  />
+		<input type="button" class="inButton" id="5" onclick="clickf(this.id)"  />
+		<br />
+		<input type="button" class="inButton" id="6" onclick="clickf(this.id)"  />
+		<input type="button" class="inButton" id="7" onclick="clickf(this.id)" />
+		<input type="button" class="inButton" id="8" onclick="clickf(this.id)" />
+
+
+	
+<br />
+<br />
+<br />
+
+<!--
+<p><input type="text" id="t1" value="init"/></p>
+<p><input type="text" id="t2" value="init"/></p>
+<p><input type="text" id="t3" value="init"/></p>
+-->
+
+<p><div id="l1">Click to add your mark</div></p>
+<br />
+<br />
+<br />
+
+<p><font color="#525873">Any improvisations, please do mail me ... Thanks for your time :)</font></p>
+
+<p><h4>asaranprasad@gmail.com</h4></p>
+
+
+</div>
+
+
+
+</body>
+
+</html>
