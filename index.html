@@ -108,7 +108,7 @@ function check(r)
           for(i=0;i<81;i++)
             if(check(i)==1)
             {
-              alert("Repeating elements found in the puzzle.\n Fix input.");
+              alert("Found a couple of repeating elements in the puzzle. Fix input.");
               document.getElementById(i+1).style.color="#ff0000";   
               return;
             }
