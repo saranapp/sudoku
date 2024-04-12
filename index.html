@@ -93,7 +93,7 @@ function check(r)
 
             else if((document.getElementById(i).value<1) || (document.getElementById(i).value>9)|| parseInt((document.getElementById(i).value)==NaN))
             {
-              alert("Please enter a value between 1 and 9 !!");
+              alert("Please enter a value between 1 and 9 !");
               return;
             }   
 
@@ -108,7 +108,7 @@ function check(r)
           for(i=0;i<81;i++)
             if(check(i)==1)
             {
-              alert("some elements are repeating...\n Please check the question..");
+              alert("Repeating elements found in the puzzle.\n Fix input.");
               document.getElementById(i+1).style.color="#ff0000";   
               return;
             }
@@ -122,7 +122,7 @@ function check(r)
 
               if(j==0)
               {
-                alert("The puzzle is already solved!!"); 
+                alert("The puzzle is already solved!"); 
                 return;
               }
 
@@ -154,7 +154,7 @@ function check(r)
                     i--;
                   if(i<0)
                   {
-                    alert("This sudoku has no solution"); 
+                    alert("This sudoku has no solution :("); 
                     return;
                   }
 
